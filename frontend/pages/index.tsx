@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 // This is the main page component
 const IndexPage: React.FC = () => {
-  const router = useRouter(); // Hook to programmatically navigate
+  const router = useRouter();
   const [userID, setUserID] = useState(''); // State to store the input value
 
   const handleFind = () => {

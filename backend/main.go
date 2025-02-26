@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strconv"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
@@ -9,7 +11,7 @@ import (
 
 // User struct represents a user in the database
 type User struct {
-	ID    uint   `json:"id" gorm:"primaryKey"`
+	ID    int    `json:"id" gorm:"primaryKey"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
@@ -53,11 +55,19 @@ func getUsers(c *gin.Context) {
 
 // getUserByID handles GET requests to /users/:id and returns a user by ID
 func getUserByID(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid ID"})
+		return
+	}
+
 	var user User
-	if err := db.First(&user, c.Param("id")).Error; err != nil {
+	if err := db.First(&user, id).Error; err != nil {
 		c.JSON(404, gin.H{"error": "User not found"})
 		return
 	}
+
 	c.JSON(200, user)
 }
 
@@ -74,26 +84,44 @@ func createUser(c *gin.Context) {
 
 // updateUser handles PUT requests to /users/:id and updates an existing user
 func updateUser(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid ID"})
+		return
+	}
+
 	var user User
-	if err := db.First(&user, c.Param("id")).Error; err != nil {
+	if err := db.First(&user, id).Error; err != nil {
 		c.JSON(404, gin.H{"error": "User not found"})
 		return
 	}
+
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+
+	user.ID = id
 	db.Save(&user)
 	c.JSON(200, user)
 }
 
 // deleteUser handles DELETE requests to /users/:id and deletes a user
 func deleteUser(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid ID"})
+		return
+	}
+
 	var user User
-	if err := db.First(&user, c.Param("id")).Error; err != nil {
+	if err := db.First(&user, id).Error; err != nil {
 		c.JSON(404, gin.H{"error": "User not found"})
 		return
 	}
+
 	db.Delete(&user)
 	c.JSON(204, gin.H{"message": "User deleted"})
 }

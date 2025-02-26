@@ -12,7 +12,7 @@ const FindUserPage: React.FC = () => {
   // Fetch the user data when the component mounts or the ID changes
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:8080/user?id=${id}`).then(response => {
+      axios.get(`http://localhost:8080/users/${id}`).then(response => {
         console.log('API response:', response.data); // Log the API response
         setUser(response.data); // Set the fetched user data to the state
         setLoading(false); // Set loading to false after data is fetched
