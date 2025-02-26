@@ -4,13 +4,10 @@ import { useRouter } from 'next/router';
 // This is the main page component
 const IndexPage: React.FC = () => {
   const router = useRouter(); // Hook to programmatically navigate
-  const [username, setUsername] = useState(''); // State to store the input value
-
-  console.log('Rendering IndexPage'); // Log to check if the component is rendering
+  const [userID, setUserID] = useState(''); // State to store the input value
 
   const handleFind = () => {
-    console.log('Find button clicked'); // Log to check if the button is clicked
-    router.push(`/user/find?name=${username}`); // Navigate to the find page with the username as a query parameter
+    router.push(`/user/find?id=${userID}`); // Navigate to the find page with the user ID as a query parameter
   };
 
   return (
@@ -21,13 +18,14 @@ const IndexPage: React.FC = () => {
       {/* Button to navigate to the list of users */}
       <button onClick={() => router.push('/user/list')}>List Users</button>
       <div>
-        {/* Input field to enter the username */}
+        {/* Input field to enter the user ID */}
         <input
           type="text"
-          placeholder="Enter username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)} // Update the state with the input value
+          placeholder="Enter user ID"
+          value={userID}
+          onChange={(e) => setUserID(e.target.value)} // Update the state with the input value
         />
+        {/* Button to find the user by ID */}
         <button onClick={handleFind}>Find</button>
       </div>
     </div>

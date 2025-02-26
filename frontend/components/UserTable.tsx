@@ -3,12 +3,12 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 
 const UserTable = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<{ id: number; name: string; email: string }[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     axios.get('http://localhost:8080/users').then(response => {
-      setUsers(response.data);
+      return setUsers(response.data as { id: number; name: string; email: string }[]);
     });
   }, []);
 
